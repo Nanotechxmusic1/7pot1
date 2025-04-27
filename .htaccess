@@ -1,5 +1,26 @@
-# Redirect all requests to public directory
+# Enable rewrite engine
 RewriteEngine On
+
+# Set base directory
+RewriteBase /
+
+# Allow access to all files
+Order Allow,Deny
+Allow from all
+
+# Prevent access to sensitive files
+<FilesMatch "\.(php|sql)$">
+    Order Deny,Allow
+    Deny from all
+</FilesMatch>
+
+# Allow access to public PHP files
+<FilesMatch "^(index|admin)\.php$">
+    Order Allow,Deny
+    Allow from all
+</FilesMatch>
+
+# Redirect all requests to public directory
 RewriteCond %{REQUEST_URI} !^/public/
 RewriteRule ^(.*)$ public/$1 [L]
 
@@ -8,6 +29,3 @@ Options -Indexes
 
 # Set default charset
 AddDefaultCharset UTF-8
-
-# Set default index
-DirectoryIndex public/index.php
